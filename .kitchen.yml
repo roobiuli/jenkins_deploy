@@ -1,0 +1,46 @@
+---
+driver:
+  name: vagrant
+  
+
+provisioner:
+  name: chef_zero
+
+# Uncomment the following verifier to leverage Inspec instead of Busser (the
+# default verifier)
+# verifier:
+#   name: inspec
+
+platforms:
+  - name: jenkins-server
+    driver_config:
+      vm_hostname: server.deployjenkins.test
+      box: ubuntu1604
+      box_url: https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box
+      network:
+        - ["public_network", {bridge: "enp1s5", ip: "192.168.0.150"}]
+
+  - name: jenkins-node1
+      
+    driver_config:
+      costomize:
+        server_name: slave.deployjenkins.test
+      vm_hostname: node1.deployjenkins.test
+      box: ubuntu1604
+      box_url: https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box
+      network:
+        - ["public_network", {bridge: "enp1s5", ip: "192.168.0.151"}]
+
+  - name: jenkins-node2
+    driver_config:
+      vm_hostname: node2.deployjenkins.test
+      box: ubuntu1604
+      box_url: https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box
+      network:
+        - ["public_network", {bridge: "enp1s5", ip: "192.168.0.152"}]
+
+suites:
+  - name: default
+    run_list:
+      - recipe[jenkins::default]
+    attributes:
